@@ -1,0 +1,223 @@
+
+// Online C++ compiler to run C++ program online
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+class birthdayList{
+   
+   public:
+   
+   int count=1;
+   string temp;
+    struct details{
+        string name;
+        string dob;
+        string email;
+   };
+   
+   unordered_map<int,details> umap;
+  
+    void create(){
+        
+        cout << "Name : ";
+         cin >> ws;
+        getline(cin,temp); 
+        umap[count].name = temp; 
+        
+
+       
+        
+        cout << "DOB : ";
+        cin >> ws;
+        getline(cin,temp); 
+        umap[count].dob = temp; 
+        
+    
+        cout << "Email : ";
+        getline(cin,temp);
+        umap[count].email= temp; 
+        
+        count++;
+    
+    }
+
+    void display(int id , string operation){
+        
+        if(operation == "all"){
+            cout << endl;
+            cout <<"...................................................................................................................."<<endl;
+            cout << setw(5) << "Id" << setw(30) << "Name" << setw(30) << "DOB" << setw(35) << "Email" << endl;
+            for(int i=1; i<count; i++){
+                
+                cout << setw(5) << i <<setw(30) << umap[i].name << setw(30) << umap[i].dob << setw(35) << umap[i].email << endl;
+            
+            }
+            cout <<"...................................................................................................................."<<endl;
+        }
+        else{
+            if(operation == "edit"){
+                cout <<endl<<endl;
+                cout <<"                       This is information about your mention id that your want to edit                              "<<endl;
+                cout <<"..................................................................................................................."<<endl;
+                cout <<endl;
+                cout <<setw(5)<<"Id"<<setw(30)<<"Name"<<setw(30)<<"DOB"<<setw(35)<<"Email"<<endl;
+                cout <<setw(5)<<id<<setw(30)<<umap[id].name<<setw(30)<<umap[id].dob<<setw(35)<<umap[id].email<<endl;
+                cout <<"..................................................................................................................."<<endl;
+                
+            }
+            
+            if(operation == "search"){
+                cout <<endl<<endl;
+                cout <<"                                                   Search Result                                        "<<endl;
+                cout <<"..................................................................................................................."<<endl;
+                cout <<endl;
+                cout <<setw(5)<<"Id"<<setw(30)<<"Name"<<setw(30)<<"DOB"<<setw(35)<<"Email"<<endl;
+                cout <<setw(5)<<id<<setw(30)<<umap[id].name<<setw(30)<<umap[id].dob<<setw(35)<<umap[id].email<<endl;
+                cout <<"..................................................................................................................."<<endl;
+             
+            }
+          
+        }
+    }
+
+
+    void edit()
+    {
+        
+        int id;
+       
+        string repeat;
+      
+            do
+            {
+                cout<<"Enter your Id: ";
+                cin>>id;
+                
+                
+                    if(id <count && id > 0)
+                {
+                    //displaying the details of entered id
+                    display(id,"edit");
+                    cout<<endl<<"Note: Simply write 0 if you wish to skip any step or make no changes at all."<<endl;
+                    cout<<"Enter new name : ";
+                    cin>>ws;
+                    getline(cin,temp);
+                    if(temp!="0")
+                    {
+                        umap[id].name = temp;
+                        cout<<"name has changed successfully!"<<endl;
+                    }
+                    
+                    
+                
+                        cout<<" Enter new dob : ";
+                        getline(cin,temp);
+                    if(temp!= "0")
+                    {
+                        umap[id].dob = temp;
+                        cout<<"dob has changed successfully!"<<endl;
+                    }
+                
+                
+                        cout<<"Enter new email : ";
+                        getline(cin,temp);
+                    if(temp!="0")
+                    {
+                        umap[id].email = temp;
+                        cout<<"email has changed successfully! ";
+                        
+                    }
+                }  
+            
+                else
+                {
+                    
+                    cout<<"the id is not in the birthdaylist"<<endl;
+                }
+                cout<<endl;
+                cout<<"Do you want to keep editing: Y?N ";
+              
+                cin>>repeat;
+                
+            }while(repeat=="y" || repeat=="Y");
+            
+    }
+    
+    void search(){
+        cout<<endl;
+        cout<<"...............................You can search your friend/family birthday by name...................................."<<endl;
+        cout<<endl;
+        cout<<"Enter your Friend/Family Name: ";
+        string targetName;
+        cin>>ws;
+       getline(cin,targetName);
+        bool flag=false;
+        for( auto x : umap){
+            
+            if(x.second.name == targetName){
+                flag=true;
+                display(x.first, "search");
+            }
+             
+
+        }
+        if(!flag){
+            cout<<"Friend/Family doesn't exist in the list"<<endl;
+        }
+        
+    }
+};
+int main() {
+    
+    // Write C++ code here
+    birthdayList b1;
+    cout<<"............................................Friend/Family birthday list..........................................."<<endl<<endl;
+    cout<<"1. Create"<<endl;
+    cout<<"2. Display"<<endl;
+    cout<<"3. Edit"<<endl;
+    cout<<"4. Search"<<endl<<endl;
+    
+    cout<<"...............You can start perform operation by entering the number according to the operation................."<<endl<<endl;
+    bool flag=true;
+    
+    char repeat;
+    
+    do{
+    
+    int choice;
+   
+    cin>>choice;
+    
+    switch(choice){
+        
+        case 1:
+            b1.create();
+            
+            cout<<"Done! Record are entered into the birthdaylist..."<<endl;
+            cout<<endl;
+            break;
+           
+        
+        case 2:
+            b1.display(100, "all");
+            break;
+           
+        
+        case 3:
+            b1.edit();
+            break;
+            
+        
+        case 4:
+            b1.search();
+            break;
+        
+        }
+        cout<<endl;
+        cout<<"Do you want to perform any operation: Y?N ";
+        cin>>repeat;
+    }while (repeat == 'y' || repeat == 'Y');
+
+    return 0; 
+}
