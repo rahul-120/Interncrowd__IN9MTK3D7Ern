@@ -1,0 +1,484 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+using namespace std;
+#include<bits/stdc++.h>
+bool drawFlag = true;
+class tic_toe_game
+{
+
+private:
+
+  string player1;
+  string player2;
+
+  char p1Choice;
+  char p2Choice;
+
+
+    unordered_map < string, pair < int, int >>result;
+
+  string loserName;
+
+public:
+
+  //Examine the game board to determine if either player has achieved victory
+  // and provide the corresponding symbol 'X' or 'O' based on the winning player's selection.
+  char checkWinner (char arr[3][3])
+  {
+
+    // check rowwise
+
+    bool flag;
+    int i = 0, j = 0;
+
+    while (i < 3)
+      {
+	flag = false;
+	j = 0;
+	while (j < 2)
+	  {
+
+	    if (arr[i][j] == arr[i][j + 1])
+	      {
+		flag = true;
+		j++;
+	      }
+	    else
+	      {
+		flag = false;
+		j++;
+		break;
+	      }
+	  }
+	if (flag)
+	  {
+	    return arr[i][j];
+	  }
+	i++;
+      }
+
+
+    //check columnwise
+    j = 0;
+    i = 0;
+
+    while (j < 3)
+      {
+	flag = false;
+	i = 0;
+	while (i < 2)
+	  {
+
+	    if (arr[i][j] == arr[++i][j])
+	      {
+		flag = true;
+	      }
+	    else
+	      {
+		flag = false;
+		break;
+	      }
+
+	  }
+	j++;
+	if (flag)
+	  {
+	    return arr[i - 1][j - 1];
+	  }
+
+      }
+
+    //check first diagnol
+
+    i = 0;
+    j = 0;
+    flag = false;
+
+    while (i <= 1 && j <= 1)
+      {
+
+	if (arr[i][j] == arr[i + 1][j + 1])
+	  {
+	    flag = true;
+	  }
+	else
+	  {
+	    flag = false;
+	    break;
+	  }
+	i++;
+	j++;
+      }
+
+    if (flag)
+      {
+	return arr[i - 1][j - 1];
+      }
+
+    //check second diagnol
+
+    i = 0;
+    j = 2;
+    flag = false;
+
+    while (i <= 1 && j >= 1)
+      {
+
+	if (arr[i][j] == arr[i + 1][j - 1])
+	  {
+	    flag = true;
+	  }
+	else
+	  {
+	    flag = false;
+	    break;
+	  }
+	i++;
+	j--;
+      }
+
+    if (flag)
+      {
+	return arr[i - 1][j + 1];
+      }
+    return 'a';
+
+  }
+
+  //Select the preferred move option, either 'X' or 'O', for player 1.
+
+  void choose (char arr[3][3])
+  {
+
+    char choice;
+    cin >> choice;
+    choice = toupper (choice);
+    p1Choice = choice;
+    if (choice == 'X')
+      {
+	p2Choice = '0';
+      }
+    else
+      {
+	p2Choice = 'X';
+      }
+
+    cout << player1 << " :-" << "(" << choice << ")" << endl;
+    cout << player2 << " :-" << "(" << p2Choice << ")" << endl;
+    cout << endl;
+    showBoard (arr);
+
+  }
+  void takeInfo (char arr[3][3])
+  {
+    cout << "Enter name of player 1: ";
+    cin >> ws;
+    getline (cin, player1);
+    string output1;
+  for (char c:player1)
+      {
+	output1 += toupper (c);
+      }
+    player1 = output1;
+    cout << "Enter name of player 2: ";
+    cin >> ws;
+    getline (cin, player2);
+    string output2;
+  for (char c:player2)
+      {
+	output2 += toupper (c);
+      }
+    player2 = output2;
+    cout << "player 1 " << player1 << " choose the X or 0: ";
+    choose (arr);
+
+  }
+
+//Display the game grid for tic-tac-toe.
+  void showBoard (char arr[3][3])
+  {
+    cout << endl;
+    for (int i = 0; i < 3; i++)
+      {
+
+	for (int j = 0; j < 3; j++)
+	  {
+
+	    cout << setw (4) << arr[i][j] << " ";
+	    if (j != 2)
+	      {
+		cout << "|";
+
+	      }
+	  }
+	cout << endl;
+	if (i != 2)
+	  {
+	    cout << " ----------------" << endl;
+	  }
+      }
+  }
+
+
+  //Observe the tally of victories and defeats for each player.
+
+  void viewLeaderboard ()
+  {
+
+    cout << setw (5) << "S.no" << setw (20) << "Player Name" << setw (20) <<
+      "Win Matches" << setw (20) << "Lose Matches";
+    cout << endl;
+    int count = 1;
+  for (const auto & entry:result)
+      {
+
+	cout << setw (5) << count << setw (20) << entry.first << setw (20) <<
+	  entry.second.first << setw (20) << entry.second.second;
+	cout << endl;
+	count++;
+      }
+  }
+
+  // Updating the board following a player's move by placing either 'X' or 'O'.
+
+  void updateResult (string winnerName, string Result)
+  {
+
+    result[winnerName].first++;
+    result[loserName].second++;
+
+  }
+  void takeResponses (char arr[3][3])
+  {
+
+    unordered_map < int, bool > umap;
+    int loop = 9;
+    int count;
+    int response;
+    bool flag = false;
+    bool flag2 = false;
+    for (int i = 1; i <= 9; i++)
+      {
+	umap[i] = false;
+      }
+
+    while (loop != 0)
+      {
+	--loop;
+	count = 0;
+	do
+	  {
+
+	    if (flag == false)
+	      {
+		cout << endl;
+		cout << player1 <<
+		  " select a number to indicate your desired move: ";
+		cin >> response;
+		flag = true;
+
+	      }
+	    else
+	      {
+		cout << endl;
+		cout << player2 <<
+		  " select a number to indicate your desired move: ";
+		cin >> response;
+		flag = false;
+	      }
+
+	    //updating the number in the board with the player choice X or 0
+	    if (response > 6 && response <= 9 && umap[response] == false)
+	      {
+
+		if (flag == true)
+		  {
+		    arr[2][response - 7] = p1Choice;
+		  }
+		else
+		  {
+		    arr[2][response - 7] = p2Choice;
+		  }
+		flag2 = false;
+
+
+
+	      }
+	    else if (response > 3 && response <= 6 && umap[response] == false)
+	      {
+		if (flag == true)
+		  {
+		    arr[1][response - 4] = p1Choice;
+		  }
+		else
+		  {
+		    arr[1][response - 4] = p2Choice;
+		  }
+
+		flag2 = false;
+
+
+	      }
+	    else if (response > 0 && response <= 3 && umap[response] == false)
+	      {
+		if (flag == true)
+		  {
+		    arr[0][response - 1] = p1Choice;
+		  }
+		else
+		  {
+		    arr[0][response - 1] = p2Choice;
+		  }
+
+		flag2 = false;
+
+	      }
+
+	    else if (response < 0 || response > 9 || umap[response] == true)
+	      {
+		cout <<
+		  "invalid number or already submit response. enter valid number"
+		  << endl;
+		flag2 = true;
+		if (flag == false)
+		  {
+		    flag = true;
+		  }
+		else
+		  {
+		    flag = false;
+		  }
+
+		count++;
+	      }
+	    if (count >= 1)
+	      {
+
+		showBoard (arr);
+	      }
+	  }
+	while (flag2 == true);
+
+	umap[response] = true;
+	flag2 = false;
+	if (count == 0)
+	  {
+	    showBoard (arr);
+	  }
+	char res = checkWinner (arr);
+	if (res != 'a')
+	  {
+
+	    if (res == p1Choice)
+	      {
+
+		cout << endl << "Congratulations! " << player1 <<
+		  " wins the game" << endl;
+		drawFlag = false;
+		loserName = player2;
+		updateResult (player1, "win");
+
+	      }
+	    else
+	      {
+		cout << endl << "Congratulations! " << player2 <<
+		  " wins the game" << endl;
+		drawFlag = false;
+		loserName = player1;
+		updateResult (player2, "win");
+	      }
+
+	    break;
+	  }
+
+      }
+  }
+//start the game
+  void startGame (char arr[3][3])
+  {
+
+    takeInfo (arr);
+    takeResponses (arr);
+
+  }
+
+
+};
+
+int
+main ()
+{
+
+  char arr[3][3];
+  int response;
+  char value = '1';
+  for (int i = 0; i < 3; i++)
+    {
+
+      for (int j = 0; j < 3; j++)
+	{
+	  arr[i][j] = value;
+	  value++;
+	}
+    }
+
+  cout << setw (70) << "Welcome to the game of Tic Tac Toe" << endl << endl;
+  cout << setw (5) << "Type 1: Start the game" << endl;
+  cout << setw (5) << "Type 2: View Leaderboard" << endl;
+  cout << setw (5) << "Type 3: Exit" << endl;
+
+
+  tic_toe_game obj1;
+  do
+    {
+
+      char value = '1';
+      for (int i = 0; i < 3; i++)
+	{
+
+	  for (int j = 0; j < 3; j++)
+	    {
+	      arr[i][j] = value;
+	      value++;
+	    }
+	}
+      response;
+      cout << "Please input any number and hit enter to initiate the game: ";
+      cin >> response;
+
+      switch (response)
+	{
+
+	case 1:
+
+	  obj1.startGame (arr);
+	  if (drawFlag)
+	    {
+	      cout << "Match is draw" << endl;
+	    }
+	  break;
+
+	case 2:
+
+	  obj1.viewLeaderboard ();
+	  break;
+
+	case 3:
+
+	  break;
+	}
+    }
+  while (response == 1 || response == 2);
+
+
+  return 0;
+
+
+}
